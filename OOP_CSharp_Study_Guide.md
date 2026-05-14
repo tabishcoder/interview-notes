@@ -1266,3 +1266,373 @@ notifier.Send("Your package has arrived.");
 ---
 
 *End of guide. Good luck in your interviews.*
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+SOLID principles are basically rules for writing clean, scalable, interview-ready OOP code. Interviewers love them because they directly test whether you think in design, not just syntax.
+
+I’ll break each principle into:
+
+Core idea (simple)
+Real-world analogy
+C# code example
+Common interview scenario
+Relation with OOP concepts
+🔷 S — Single Responsibility Principle (SRP)
+💡 Idea
+
+A class should have only one reason to change.
+
+🌍 Real-world example
+
+A Restaurant system:
+
+Bad design:
+
+One “RestaurantManager” class handles:
+billing
+cooking
+inventory
+delivery
+
+If billing changes → whole class breaks.
+
+Good design:
+
+BillingService
+CookingService
+InventoryService
+
+Each has ONE responsibility.
+
+💻 C# Example
+
+❌ Bad:
+
+class Invoice
+{
+    public void CalculateTotal() {}
+    public void PrintInvoice() {}
+    public void SaveToDatabase() {}
+}
+
+✔ Good:
+
+class InvoiceCalculator
+{
+    public double CalculateTotal() => 1000;
+}
+
+class InvoicePrinter
+{
+    public void Print() {}
+}
+
+class InvoiceRepository
+{
+    public void Save() {}
+}
+🧠 Interview scenario
+
+“Design a food delivery system”
+
+If you put:
+
+order logic
+payment logic
+notification logic
+
+all in one class → ❌ SRP violation
+
+🔗 Relation
+Strongly connected to OOP encapsulation
+Helps avoid God classes
+🔷 O — Open/Closed Principle (OCP)
+💡 Idea
+
+Software should be:
+
+Open for extension
+Closed for modification
+🌍 Real-world example
+
+Payment system:
+
+Initially: Cash only
+Later: Add Card, JazzCash, Stripe
+
+You should NOT modify existing payment code every time.
+
+💻 C# Example
+
+❌ Bad:
+
+class Payment
+{
+    public void Pay(string type)
+    {
+        if(type == "cash") {}
+        else if(type == "card") {}
+    }
+}
+
+✔ Good (polymorphism):
+
+interface IPayment
+{
+    void Pay();
+}
+
+class CashPayment : IPayment
+{
+    public void Pay() {}
+}
+
+class CardPayment : IPayment
+{
+    public void Pay() {}
+}
+
+Now we EXTEND without modifying.
+
+🧠 Interview scenario
+
+“Add new payment method in system”
+
+If you modify existing logic → bad design
+If you add new class → good OCP
+
+🔗 Relation
+Uses polymorphism
+Uses interfaces / abstraction
+🔷 L — Liskov Substitution Principle (LSP)
+💡 Idea
+
+Child class must be replaceable with parent class without breaking system.
+
+🌍 Real-world example
+
+If “Bird” can fly:
+
+Sparrow → OK
+Penguin → ❌ breaks rule
+
+So Penguin should NOT inherit Bird (bad design)
+
+💻 C# Example
+
+❌ Bad:
+
+class Bird
+{
+    public virtual void Fly() {}
+}
+
+class Penguin : Bird
+{
+    public override void Fly()
+    {
+        throw new Exception("Cannot fly");
+    }
+}
+
+✔ Good design:
+
+class Bird {}
+
+interface IFlyable
+{
+    void Fly();
+}
+
+class Sparrow : Bird, IFlyable
+{
+    public void Fly() {}
+}
+
+class Penguin : Bird {}
+🧠 Interview scenario
+
+“Inheritance hierarchy of animals”
+
+If child breaks parent behavior → LSP violation
+
+🔗 Relation
+Deeply connected with inheritance
+Encourages correct abstraction design
+🔷 I — Interface Segregation Principle (ISP)
+💡 Idea
+
+Do NOT force classes to implement unused methods.
+
+🌍 Real-world example
+
+Worker system:
+
+HumanWorker → eats, works, sleeps
+RobotWorker → only works
+
+If both implement same interface → problem.
+
+💻 C# Example
+
+❌ Bad:
+
+interface IWorker
+{
+    void Work();
+    void Eat();
+}
+
+Robot must implement Eat ❌
+
+✔ Good:
+
+interface IWorkable
+{
+    void Work();
+}
+
+interface IEatable
+{
+    void Eat();
+}
+
+Now:
+
+HumanWorker implements both
+RobotWorker implements only Work
+🧠 Interview scenario
+
+“Design employee system”
+
+If one class is forced to implement irrelevant methods → ISP violation
+
+🔗 Relation
+Improves interface design
+Reduces tight coupling
+🔷 D — Dependency Inversion Principle (DIP)
+💡 Idea
+
+Depend on abstractions, not concrete classes
+
+🌍 Real-world example
+
+Car engine system:
+
+Car should depend on “Engine interface”
+Not DieselEngine / PetrolEngine directly
+💻 C# Example
+
+❌ Bad:
+
+class DieselEngine {}
+
+class Car
+{
+    DieselEngine engine = new DieselEngine();
+}
+
+✔ Good:
+
+interface IEngine
+{
+    void Start();
+}
+
+class DieselEngine : IEngine
+{
+    public void Start() {}
+}
+
+class Car
+{
+    private IEngine engine;
+
+    public Car(IEngine engine)
+    {
+        this.engine = engine;
+    }
+}
+🧠 Interview scenario
+
+“Design scalable backend system”
+
+If you hardcode dependencies → bad
+If you inject interfaces → good
+
+🔗 Relation
+Uses dependency injection
+Uses abstraction heavily
+🔥 HOW SOLID WORKS TOGETHER
+
+Think like this:
+
+Principle	OOP Concept
+SRP	Encapsulation
+OCP	Polymorphism
+LSP	Inheritance correctness
+ISP	Interface design
+DIP	Abstraction + DI
+🧠 INTERVIEW SCENARIOS (VERY IMPORTANT)
+1. “Design a Food Delivery App”
+
+You should say:
+
+SRP → separate Order, Payment, Notification
+OCP → new payment methods added via new classes
+DIP → services depend on interfaces
+ISP → small interfaces (Payable, Deliverable)
+LSP → inheritance used correctly for roles
+2. “Design Banking System”
+SRP → AccountService, TransactionService
+OCP → new account types
+DIP → Bank depends on IAccountRepository
+ISP → separate interfaces for ATM, Online banking
+LSP → SavingsAccount replaces Account safely
+3. “Design Uber system”
+SRP → RideService, PaymentService
+OCP → new vehicle types
+DIP → Driver depends on IVehicle
+ISP → separate interfaces for Ride, Payment
+LSP → Car/Bike replace Vehicle correctly
+🔥 COMMON INTERVIEW QUESTIONS
+1. Why SOLID?
+
+Answer:
+
+scalable code
+maintainability
+testability
+reduces tight coupling
+2. Which principle is most important?
+
+Depends, but often:
+
+DIP + OCP are most critical in real systems
+3. Difference between SRP and OCP?
+SRP → one reason to change
+OCP → extend without modification
+🚀 FINAL MENTAL MODEL
+
+If you remember ONE thing:
+
+SOLID = How to structure OOP systems so they don’t break when requirements change
