@@ -1285,8 +1285,6 @@ notifier.Send("Your package has arrived.");
 
 
 
-
-
 SOLID principles are basically rules for writing clean, scalable, interview-ready OOP code. Interviewers love them because they directly test whether you think in design, not just syntax.
 
 I’ll break each principle into:
